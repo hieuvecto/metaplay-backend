@@ -1,0 +1,31 @@
+{
+  "name": "metaplay-dummy-site",
+  "version": "1.0.0",
+  "description": "MetaPlay dummy site",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "nodemon index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hieuvecto/metaplay-dummy-site.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hieuvecto/metaplay-dummy-site/issues"
+  },
+  "homepage": "https://github.com/hieuvecto/metaplay-dummy-site#readme",
+  "dependencies": {
+    "fastify": "^4.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}

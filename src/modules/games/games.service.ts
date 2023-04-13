@@ -2,7 +2,12 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { PostgrestError } from '@supabase/postgrest-js';
 import SupabaseService from '../../common/supabase/supabase.service';
 import { CreateGameBody, GetGameParams } from './games.schema';
-import { UserInputError } from '../../common/errors/user_input_error';
+import {
+  ConflictError,
+  NotFoundError,
+  UserInputError,
+} from '../../common/errors';
+import Logger from '../../common/logger';
 
 class GamesService {
   private static instance: GamesService;
@@ -30,7 +35,7 @@ class GamesService {
         .maybeSingle();
       if (error) throw error;
       if (!data) {
-        throw new UserInputError('Game not found.');
+        throw new NotFoundError('Game not found.');
       }
 
       return data;
@@ -38,8 +43,7 @@ class GamesService {
       if (e instanceof UserInputError) {
         throw e;
       }
-      // TODO: use fastify logger.
-      console.log(e.message);
+      Logger.error(`Cannot get game: ${e.message}`);
       throw new Error('Cannot get game.');
     }
   }
@@ -61,7 +65,7 @@ class GamesService {
         throw getRes.error;
       }
       if (getRes.data) {
-        throw new UserInputError('Game existed.');
+        throw new ConflictError('Game existed.');
       }
 
       const { data, error } = await this.serviceSupabaseInstance
@@ -83,7 +87,7 @@ class GamesService {
       if (e instanceof UserInputError) {
         throw e;
       }
-      console.log(e.message);
+      Logger.error(`Cannot create game: ${e.message}`);
       throw new Error('Cannot create game.');
     }
   }

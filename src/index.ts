@@ -1,7 +1,40 @@
 import fastify from 'fastify';
 import GamesRoutes from './modules/games/games.routes';
+import Logger from './common/logger';
+import {
+  BadRequestError,
+  ConflictError,
+  NotFoundError,
+  UserInputError,
+} from './common/errors';
+import { StatusCodes } from 'http-status-codes';
 
-const server = fastify();
+// TODO: set Logger by ENV
+const server = fastify({ logger: Logger });
+
+server.setErrorHandler(function (error, request, reply) {
+  if (error instanceof BadRequestError) {
+    reply.status(StatusCodes.BAD_REQUEST).send(error);
+    return;
+  }
+
+  if (error instanceof ConflictError) {
+    reply.status(StatusCodes.CONFLICT).send(error);
+    return;
+  }
+
+  if (error instanceof NotFoundError) {
+    reply.status(StatusCodes.NOT_FOUND).send(error);
+    return;
+  }
+
+  if (error instanceof UserInputError) {
+    reply.status(StatusCodes.UNPROCESSABLE_ENTITY).send(error);
+    return;
+  }
+
+  reply.send(error);
+});
 
 // Games module
 server.register(

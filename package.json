@@ -4,9 +4,9 @@
   "description": "MetaPlay dummy site",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js",
-    "dev": "nodemon index.ts"
+    "build": "tsc",
+    "start": "node dist/src/index.js",
+    "dev": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,11 @@
   },
   "homepage": "https://github.com/hieuvecto/metaplay-dummy-site#readme",
   "dependencies": {
-    "fastify": "^4.15.0"
+    "@supabase/supabase-js": "^2.20.0",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.15.0",
+    "http-status-codes": "^2.2.0",
+    "json-schema-to-ts": "^2.7.2"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",

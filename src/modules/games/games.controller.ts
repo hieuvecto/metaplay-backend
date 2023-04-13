@@ -4,6 +4,7 @@ import {
   CreateGameBody,
   DeleteGameParams,
   GetGameParams,
+  GetGamesQueryString,
   UpdateGameBody,
   UpdateGameParams,
 } from './games.schema';
@@ -17,6 +18,14 @@ const GamesController: Controller = {
     reply,
   ) => {
     const data = await GamesService.getInstance().getGame(request.params);
+    return reply.send(data);
+  },
+
+  getGames: async (
+    request: FastifyRequest<{ Querystring: GetGamesQueryString }>,
+    reply,
+  ) => {
+    const data = await GamesService.getInstance().getGames(request.query);
     return reply.send(data);
   },
 

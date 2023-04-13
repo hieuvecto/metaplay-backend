@@ -5,6 +5,7 @@ import {
   CreateGameBody,
   DeleteGameParams,
   GetGameParams,
+  GetGamesQueryString,
   UpdateGameBody,
   UpdateGameParams,
 } from './games.schema';
@@ -56,8 +57,24 @@ class GamesService {
     }
   }
 
-  // I can't find anywhere in the docs about transaction support in Supabase
-  // https://github.com/orgs/supabase/discussions/526
+  public async getGames({
+    limit = 100,
+    offset = 0,
+  }: GetGamesQueryString): Promise<any[]> {
+    try {
+      const { data, error } = await this.supabaseService
+        .from('games')
+        .select()
+        .range(offset, offset + limit);
+      if (error) throw error;
+
+      return data;
+    } catch (e) {
+      Logger.error(`Cannot get games: ${e.message}`);
+      throw new Error('Cannot get games.');
+    }
+  }
+
   public async createGame(
     { name, display_name, description, image_url }: CreateGameBody,
     request: FastifyRequestWithUser,
@@ -101,6 +118,9 @@ class GamesService {
     }
   }
 
+  // I intent to use transaction (with lock) to ensure consistency
+  // But I can't find anywhere in the docs about transaction support in Supabase
+  // https://github.com/orgs/supabase/discussions/526
   public async updateGame(
     { id }: UpdateGameParams,
     { display_name, description, image_url }: UpdateGameBody,

@@ -2,22 +2,26 @@ import { FromSchema } from 'json-schema-to-ts';
 
 // TODO: enhance validation
 export const GetGameSchema = {
+  summary: 'Get game record',
+  tags: ['game'],
+  description: 'Get game record',
   params: {
     type: 'object',
     required: ['id'],
     properties: {
-      id: { type: 'integer' },
+      id: { type: 'integer', description: 'Game id' },
     },
   },
   response: {
     200: {
       type: 'object',
       properties: {
-        id: { type: 'integer' },
-        name: { type: 'string' },
-        display_name: { type: 'string' },
-        description: { type: 'string' },
-        image_url: { type: 'string' },
+        id: { type: 'integer', description: 'Game id' },
+        name: { type: 'string', description: 'Game name' },
+        display_name: { type: 'string', description: 'Display game name' },
+        description: { type: 'string', description: 'Game description' },
+        image_url: { type: 'string', description: 'Game image' },
+        user_id: { type: 'string', description: 'user id relation' },
       },
     },
   },
@@ -25,72 +29,126 @@ export const GetGameSchema = {
 
 export type GetGameParams = FromSchema<typeof GetGameSchema.params>;
 
+export const GetGamesSchema = {
+  summary: 'Get games array',
+  tags: ['game'],
+  description: 'Get games array',
+  querystring: {
+    type: 'object',
+    properties: {
+      limit: { type: 'integer', description: 'limit' },
+      offset: { type: 'integer', description: 'offset' },
+    },
+  },
+  response: {
+    200: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer', description: 'Game id' },
+          name: { type: 'string', description: 'Game name' },
+          display_name: { type: 'string', description: 'Display game name' },
+          description: { type: 'string', description: 'Game description' },
+          image_url: { type: 'string', description: 'Game image' },
+          user_id: { type: 'string', description: 'user id relation' },
+        },
+      },
+    },
+  },
+} as const;
+
+export type GetGamesQueryString = FromSchema<typeof GetGamesSchema.querystring>;
+
 export const CreateGameSchema = {
+  summary: 'Create new game record (AUTHENTICATION REQUIRED)',
+  description: 'Create new game record.',
+  tags: ['game'],
   body: {
     type: 'object',
     required: ['name', 'display_name'],
     properties: {
-      name: { type: 'string' },
-      display_name: { type: 'string' },
-      description: { type: 'string' },
-      image_url: { type: 'string' },
+      name: { type: 'string', description: 'Game name' },
+      display_name: { type: 'string', description: 'Display game name' },
+      description: { type: 'string', description: 'Game description' },
+      image_url: { type: 'string', description: 'Game image' },
     },
   },
   response: {
     201: {
       type: 'object',
       properties: {
-        id: { type: 'integer' },
-        name: { type: 'string' },
-        display_name: { type: 'string' },
-        description: { type: 'string' },
-        image_url: { type: 'string' },
+        id: { type: 'integer', description: 'Game id' },
+        name: { type: 'string', description: 'Game name' },
+        display_name: { type: 'string', description: 'Display game name' },
+        description: { type: 'string', description: 'Game description' },
+        image_url: { type: 'string', description: 'Game image' },
+        user_id: { type: 'string', description: 'user id relation' },
       },
     },
   },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
 } as const;
 
 export type CreateGameBody = FromSchema<typeof CreateGameSchema.body>;
 
 export const UpdateGameSchema = {
+  summary: 'Update existed game record (AUTHENTICATION REQUIRED)',
+  tags: ['game'],
+  description:
+    'Create existed game record. Only user that created the record have the permission.',
   params: {
     type: 'object',
     required: ['id'],
     properties: {
-      id: { type: 'integer' },
+      id: { type: 'integer', description: 'Game id' },
     },
   },
   body: {
     type: 'object',
     properties: {
-      display_name: { type: 'string' },
-      description: { type: 'string' },
-      image_url: { type: 'string' },
+      display_name: { type: 'string', description: 'Display game name' },
+      description: { type: 'string', description: 'Game description' },
+      image_url: { type: 'string', description: 'Game image' },
     },
   },
   response: {
     200: {
       type: 'object',
       properties: {
-        id: { type: 'integer' },
-        name: { type: 'string' },
-        display_name: { type: 'string' },
-        description: { type: 'string' },
-        image_url: { type: 'string' },
+        id: { type: 'integer', description: 'Game id' },
+        name: { type: 'string', description: 'Game name' },
+        display_name: { type: 'string', description: 'Display game name' },
+        description: { type: 'string', description: 'Game description' },
+        image_url: { type: 'string', description: 'Game image' },
+        user_id: { type: 'string', description: 'user id relation' },
       },
     },
   },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
 } as const;
 
 export type UpdateGameParams = FromSchema<typeof UpdateGameSchema.params>;
 export type UpdateGameBody = FromSchema<typeof UpdateGameSchema.body>;
 
 export const DeleteGameSchema = {
+  summary: 'Delete existed game record (AUTHENTICATION REQUIRED)',
+  tags: ['game'],
+  description:
+    'Delete existed game record. Only user that created the record have the permission.',
   params: {
     type: 'object',
     required: ['id'],
     properties: {
-      id: { type: 'integer' },
+      id: { type: 'integer', description: 'Game id' },
     },
   },
   response: {
@@ -98,6 +156,11 @@ export const DeleteGameSchema = {
       type: 'boolean',
     },
   },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
 } as const;
 
 export type DeleteGameParams = FromSchema<typeof DeleteGameSchema.params>;

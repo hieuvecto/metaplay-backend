@@ -1,4 +1,7 @@
 import fastify from 'fastify';
+import fastifySwagger from '@fastify/swagger';
+import fastifySwaggerUi from '@fastify/swagger-ui';
+import { StatusCodes } from 'http-status-codes';
 import GamesRoutes from './modules/games/games.routes';
 import Logger from './common/logger';
 import {
@@ -9,11 +12,41 @@ import {
   UnauthorizedError,
   UserInputError,
 } from './common/errors';
-import { StatusCodes } from 'http-status-codes';
 
 // TODO: set Logger by ENV
 const server = fastify({ logger: Logger });
 
+server.register(fastifySwagger, {
+  openapi: {
+    info: {
+      title: 'MetaPlay API',
+      description: 'MetaPlay API description',
+      version: '0.1.0',
+    },
+    tags: [{ name: 'game', description: 'Game related end-points' }],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+  },
+});
+
+server.register(fastifySwaggerUi, {
+  routePrefix: '/docs',
+});
+
+// Executes Swagger
+server.ready((err) => {
+  if (err) throw err;
+  server.swagger();
+});
+
+// set global error handler
 server.setErrorHandler(function (error, request, reply) {
   if (error instanceof BadRequestError) {
     reply.status(StatusCodes.BAD_REQUEST).send(error);
@@ -60,6 +93,7 @@ server.register(
   { prefix: 'games' },
 );
 
+server.ready();
 server.listen({ port: 8080 }, (err, address) => {
   if (err) {
     console.error(err);

@@ -29,3 +29,19 @@ export class ConflictError extends UserInputError {
     Object.defineProperty(this, 'name', { value: 'Conflict error' });
   }
 }
+
+export class UnauthorizedError extends UserInputError {
+  constructor(message: string) {
+    super(message);
+    this.name = 'UNAUTHORIZED_ERROR';
+    Object.defineProperty(this, 'name', { value: 'Unauthorized error' });
+  }
+}
+
+export class ForbiddenError extends UserInputError {
+  constructor(message: string) {
+    super(message);
+    this.name = 'FORBIDDEN_ERROR';
+    Object.defineProperty(this, 'name', { value: 'Forbidden error' });
+  }
+}

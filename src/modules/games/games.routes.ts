@@ -1,6 +1,12 @@
 import GamesController from './games.controller';
 import { Route, RouteMethod } from '../../interfaces';
-import { CreateGameSchema, GetGameSchema } from './games.schema';
+import {
+  CreateGameSchema,
+  DeleteGameSchema,
+  GetGameSchema,
+  UpdateGameSchema,
+} from './games.schema';
+import JwtLoginLevelGuard from '../../common/guards/jwt_login_level_guard';
 
 const GamesRoutes: Route[] = [
   {
@@ -14,6 +20,21 @@ const GamesRoutes: Route[] = [
     url: '/',
     schema: CreateGameSchema,
     handler: GamesController.createGame,
+    preHandler: JwtLoginLevelGuard,
+  },
+  {
+    method: RouteMethod.PUT,
+    url: '/:id',
+    schema: UpdateGameSchema,
+    handler: GamesController.updateGame,
+    preHandler: JwtLoginLevelGuard,
+  },
+  {
+    method: RouteMethod.DELETE,
+    url: '/:id',
+    schema: DeleteGameSchema,
+    handler: GamesController.deleteGame,
+    preHandler: JwtLoginLevelGuard,
   },
 ];
 

@@ -15,10 +15,17 @@ export enum RouteMethod {
   DELETE = 'DELETE',
 }
 
-// TODO: enhance Route to make it more generic
+export type Guard = (
+  request: FastifyRequest,
+  reply: FastifyReply,
+  next: (err?: Error) => void,
+) => void | Promise<void>;
+
+// TODO: enhance Route type to make it more generic
 export type Route = {
   method: RouteMethod;
   url: string;
   schema?: any; // TODO: make general schema type.
   handler: Handler;
+  preHandler?: Guard | Guard[];
 };

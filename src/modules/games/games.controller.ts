@@ -1,8 +1,15 @@
 import { FastifyRequest } from 'fastify';
 import { Controller } from '../../interfaces';
-import { CreateGameBody, GetGameParams } from './games.schema';
+import {
+  CreateGameBody,
+  DeleteGameParams,
+  GetGameParams,
+  UpdateGameBody,
+  UpdateGameParams,
+} from './games.schema';
 import GamesService from './games.service';
 import { StatusCodes } from 'http-status-codes';
+import { FastifyRequestWithUser } from '../../common/guards/jwt_login_level_guard';
 
 const GamesController: Controller = {
   getGame: async (
@@ -12,12 +19,39 @@ const GamesController: Controller = {
     const data = await GamesService.getInstance().getGame(request.params);
     return reply.send(data);
   },
+
   createGame: async (
     request: FastifyRequest<{ Body: CreateGameBody }>,
     reply,
   ) => {
-    const data = await GamesService.getInstance().createGame(request.body);
+    const data = await GamesService.getInstance().createGame(
+      request.body,
+      request as FastifyRequestWithUser,
+    );
     return reply.code(StatusCodes.CREATED).send(data);
+  },
+
+  updateGame: async (
+    request: FastifyRequest<{ Params: UpdateGameParams; Body: UpdateGameBody }>,
+    reply,
+  ) => {
+    const data = await GamesService.getInstance().updateGame(
+      request.params,
+      request.body,
+      request as FastifyRequestWithUser,
+    );
+    return reply.send(data);
+  },
+
+  deleteGame: async (
+    request: FastifyRequest<{ Params: DeleteGameParams }>,
+    reply,
+  ) => {
+    const data = await GamesService.getInstance().deleteGame(
+      request.params,
+      request as FastifyRequestWithUser,
+    );
+    return reply.send(data);
   },
 };
 

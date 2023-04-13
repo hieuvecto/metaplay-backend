@@ -4,7 +4,9 @@ import Logger from './common/logger';
 import {
   BadRequestError,
   ConflictError,
+  ForbiddenError,
   NotFoundError,
+  UnauthorizedError,
   UserInputError,
 } from './common/errors';
 import { StatusCodes } from 'http-status-codes';
@@ -28,6 +30,16 @@ server.setErrorHandler(function (error, request, reply) {
     return;
   }
 
+  if (error instanceof UnauthorizedError) {
+    reply.status(StatusCodes.UNAUTHORIZED).send(error);
+    return;
+  }
+
+  if (error instanceof ForbiddenError) {
+    reply.status(StatusCodes.FORBIDDEN).send(error);
+    return;
+  }
+
   if (error instanceof UserInputError) {
     reply.status(StatusCodes.UNPROCESSABLE_ENTITY).send(error);
     return;
@@ -38,12 +50,12 @@ server.setErrorHandler(function (error, request, reply) {
 
 // Games module
 server.register(
-  (instance, opts, done) => {
+  (instance, opts, next) => {
     GamesRoutes.forEach((route) => {
       instance.route(route);
     });
 
-    done();
+    next();
   },
   { prefix: 'games' },
 );

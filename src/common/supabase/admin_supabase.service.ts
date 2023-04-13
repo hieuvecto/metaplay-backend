@@ -1,21 +1,21 @@
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
 import configs from '../../configs';
 
-class SupabaseService {
+class AdminSupabaseService {
   private static instance: SupabaseClient;
 
   private constructor() {}
 
   public static getInstance(): SupabaseClient {
-    if (!SupabaseService.instance) {
-      SupabaseService.instance = createClient(
+    if (!AdminSupabaseService.instance) {
+      AdminSupabaseService.instance = createClient(
         configs.supabaseUrl,
-        configs.supabaseAnonKey,
+        configs.supabaseServiceKey,
       );
     }
 
-    return SupabaseService.instance;
+    return AdminSupabaseService.instance;
   }
 }
 
-export default SupabaseService;
+export default AdminSupabaseService;

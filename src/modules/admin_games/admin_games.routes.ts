@@ -4,7 +4,7 @@ import {
   AdminUpdateGameSchema,
 } from './admin_games.schema';
 import JwtAdminPrivilegeGuard from '../../common/guards/jwt_admin_privilege_guard';
-import AdminGamesController from './games.controller';
+import AdminGamesController from './admin_games.controller';
 
 const AdminGamesRoutes: Route[] = [
   {

@@ -3,6 +3,7 @@ import { Guard } from '../../interfaces';
 import {
   BadRequestError,
   CaughtError,
+  ForbiddenError,
   UnauthorizedError,
   UserInputError,
 } from '../errors';
@@ -37,6 +38,10 @@ const JwtLoginLevelGuard: Guard = async (
     );
     if (error) {
       throw error;
+    }
+    // Admin user does not allowed in this guard.
+    if (data.user.user_metadata?.is_admin) {
+      throw new ForbiddenError('Forbidden.');
     }
 
     request.user = data.user;

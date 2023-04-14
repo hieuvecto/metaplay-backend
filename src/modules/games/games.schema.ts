@@ -3,7 +3,7 @@ import { FromSchema } from 'json-schema-to-ts';
 // TODO: enhance validation
 export const GetGameSchema = {
   summary: 'Get game record',
-  tags: ['game'],
+  tags: ['games'],
   description: 'Get game record',
   params: {
     type: 'object',
@@ -31,7 +31,7 @@ export type GetGameParams = FromSchema<typeof GetGameSchema.params>;
 
 export const GetGamesSchema = {
   summary: 'Get games array',
-  tags: ['game'],
+  tags: ['games'],
   description: 'Get games array',
   querystring: {
     type: 'object',
@@ -62,7 +62,7 @@ export type GetGamesQueryString = FromSchema<typeof GetGamesSchema.querystring>;
 
 export const GetMyGamesSchema = {
   summary: 'Get my games records (AUTHORIZATION REQUIRED)',
-  tags: ['game'],
+  tags: ['games'],
   description: 'Get my games records',
   querystring: {
     type: 'object',
@@ -100,8 +100,9 @@ export type GetMyGamesQueryString = FromSchema<
 
 export const CreateGameSchema = {
   summary: 'Create new game record (AUTHORIZATION REQUIRED)',
-  description: 'Create new game record.',
-  tags: ['game'],
+  description:
+    'Create new game record. (An trigger of creating new activity record would be executed in background).',
+  tags: ['games'],
   body: {
     type: 'object',
     required: ['name', 'display_name'],
@@ -136,7 +137,7 @@ export type CreateGameBody = FromSchema<typeof CreateGameSchema.body>;
 
 export const UpdateGameSchema = {
   summary: 'Update existed game record (AUTHORIZATION REQUIRED)',
-  tags: ['game'],
+  tags: ['games'],
   description:
     'Update existed game record. Only user that created the record have the permission.',
   params: {
@@ -179,7 +180,7 @@ export type UpdateGameBody = FromSchema<typeof UpdateGameSchema.body>;
 
 export const DeleteGameSchema = {
   summary: 'Delete existed game record (AUTHORIZATION REQUIRED)',
-  tags: ['game'],
+  tags: ['games'],
   description:
     'Delete existed game record. Only user that created the record have the permission.',
   params: {

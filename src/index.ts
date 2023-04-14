@@ -14,7 +14,8 @@ import {
   UnauthorizedError,
   UserInputError,
 } from './common/errors';
-import AdminGamesRoutes from './modules/admin_games/games.routes';
+import AdminGamesRoutes from './modules/admin_games/admin_games.routes';
+import AdminActivitiesRoutes from './modules/admin_activities/admin_activities.routes';
 
 // TODO: set Logger by ENV
 const server = fastify({ logger: Logger });
@@ -28,10 +29,14 @@ server.register(fastifySwagger, {
       version: '0.1.0',
     },
     tags: [
-      { name: 'game', description: 'Games module related end-points' },
+      { name: 'games', description: 'Games module related end-points' },
       {
-        name: 'admin_game',
+        name: 'admin_games',
         description: 'Admin Games module related end-points',
+      },
+      {
+        name: 'admin_activities',
+        description: 'Admin Activities module related end-points',
       },
     ],
     components: {
@@ -109,16 +114,38 @@ server.register(
   { prefix: 'games' },
 );
 
-// Admin Games module
+// Admin modules
 server.register(
-  (instance, opts, next) => {
-    AdminGamesRoutes.forEach((route) => {
-      instance.route(route);
-    });
+  (adminPrefixInstance, opts, next) => {
+    // Admin games modules
+    adminPrefixInstance.register(
+      (instance, opts, next) => {
+        AdminGamesRoutes.forEach((route) => {
+          instance.route(route);
+        });
+        next();
+      },
+      {
+        prefix: 'games',
+      },
+    );
+
+    // Admin activities modules
+    adminPrefixInstance.register(
+      (instance, opts, next) => {
+        AdminActivitiesRoutes.forEach((route) => {
+          instance.route(route);
+        });
+        next();
+      },
+      {
+        prefix: 'activities',
+      },
+    );
 
     next();
   },
-  { prefix: 'admin/games' },
+  { prefix: 'admin' },
 );
 
 server.ready();

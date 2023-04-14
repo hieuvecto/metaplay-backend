@@ -3,7 +3,7 @@ import { FromSchema } from 'json-schema-to-ts';
 // TODO: enhance validation
 export const AdminUpdateGameSchema = {
   summary: 'Update existed game record (ADMIN AUTHORIZATION REQUIRED)',
-  tags: ['admin_game'],
+  tags: ['admin_games'],
   description: 'Updating existed game record.',
   params: {
     type: 'object',
@@ -47,7 +47,7 @@ export type AdminUpdateGameBody = FromSchema<typeof AdminUpdateGameSchema.body>;
 
 export const AdminDeleteGameSchema = {
   summary: 'Delete existed game record (ADMIN AUTHORIZATION REQUIRED)',
-  tags: ['admin_game'],
+  tags: ['admin_games'],
   description: 'Delete existed game record.',
   params: {
     type: 'object',

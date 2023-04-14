@@ -61,7 +61,7 @@ export const GetGamesSchema = {
 export type GetGamesQueryString = FromSchema<typeof GetGamesSchema.querystring>;
 
 export const CreateGameSchema = {
-  summary: 'Create new game record (AUTHENTICATION REQUIRED)',
+  summary: 'Create new game record (AUTHORIZATION REQUIRED)',
   description: 'Create new game record.',
   tags: ['game'],
   body: {
@@ -97,10 +97,10 @@ export const CreateGameSchema = {
 export type CreateGameBody = FromSchema<typeof CreateGameSchema.body>;
 
 export const UpdateGameSchema = {
-  summary: 'Update existed game record (AUTHENTICATION REQUIRED)',
+  summary: 'Update existed game record (AUTHORIZATION REQUIRED)',
   tags: ['game'],
   description:
-    'Create existed game record. Only user that created the record have the permission.',
+    'Update existed game record. Only user that created the record have the permission.',
   params: {
     type: 'object',
     required: ['id'],
@@ -140,7 +140,7 @@ export type UpdateGameParams = FromSchema<typeof UpdateGameSchema.params>;
 export type UpdateGameBody = FromSchema<typeof UpdateGameSchema.body>;
 
 export const DeleteGameSchema = {
-  summary: 'Delete existed game record (AUTHENTICATION REQUIRED)',
+  summary: 'Delete existed game record (AUTHORIZATION REQUIRED)',
   tags: ['game'],
   description:
     'Delete existed game record. Only user that created the record have the permission.',

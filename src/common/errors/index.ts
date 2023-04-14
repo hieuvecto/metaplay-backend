@@ -45,3 +45,11 @@ export class ForbiddenError extends UserInputError {
     Object.defineProperty(this, 'name', { value: 'Forbidden error' });
   }
 }
+
+export class CaughtError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'CAUGHT_ERROR';
+    Object.defineProperty(this, 'name', { value: 'Caught error' });
+  }
+}

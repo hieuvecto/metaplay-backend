@@ -2,20 +2,24 @@ import fastify from 'fastify';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import { StatusCodes } from 'http-status-codes';
+import helmet from '@fastify/helmet';
 import GamesRoutes from './modules/games/games.routes';
 import Logger from './common/logger';
 import {
   BadRequestError,
+  CaughtError,
   ConflictError,
   ForbiddenError,
   NotFoundError,
   UnauthorizedError,
   UserInputError,
 } from './common/errors';
+import AdminGamesRoutes from './modules/admin_games/games.routes';
 
 // TODO: set Logger by ENV
 const server = fastify({ logger: Logger });
 
+// TODO: hide swagger in stg, prod env.
 server.register(fastifySwagger, {
   openapi: {
     info: {
@@ -23,7 +27,13 @@ server.register(fastifySwagger, {
       description: 'MetaPlay API description',
       version: '0.1.0',
     },
-    tags: [{ name: 'game', description: 'Game related end-points' }],
+    tags: [
+      { name: 'game', description: 'Games module related end-points' },
+      {
+        name: 'admin_game',
+        description: 'Admin Games module related end-points',
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -35,16 +45,16 @@ server.register(fastifySwagger, {
     },
   },
 });
-
 server.register(fastifySwaggerUi, {
   routePrefix: '/docs',
 });
-
-// Executes Swagger
 server.ready((err) => {
   if (err) throw err;
   server.swagger();
 });
+
+// Apply helmet
+server.register(helmet, { global: true });
 
 // set global error handler
 server.setErrorHandler(function (error, request, reply) {
@@ -78,7 +88,13 @@ server.setErrorHandler(function (error, request, reply) {
     return;
   }
 
-  reply.send(error);
+  if (error instanceof CaughtError) {
+    reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
+    return;
+  }
+
+  Logger.error(`Internal server error: ${error.message}`);
+  reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
 });
 
 // Games module
@@ -91,6 +107,18 @@ server.register(
     next();
   },
   { prefix: 'games' },
+);
+
+// Admin Games module
+server.register(
+  (instance, opts, next) => {
+    AdminGamesRoutes.forEach((route) => {
+      instance.route(route);
+    });
+
+    next();
+  },
+  { prefix: 'admin/games' },
 );
 
 server.ready();

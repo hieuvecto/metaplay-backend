@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { Guard } from '../../interfaces';
 import {
   BadRequestError,
+  CaughtError,
   ForbiddenError,
   UnauthorizedError,
   UserInputError,
@@ -10,8 +11,10 @@ import Logger from '../logger';
 import { User } from '@supabase/supabase-js';
 import AdminSupabaseService from '../supabase/admin_supabase.service';
 
-const AdminPrivilegeGuard: Guard = async (
-  request: FastifyRequest & { adminUser: User },
+export type FastifyRequestWithAdminUser = FastifyRequest & { adminUser: User };
+
+const JwtAdminPrivilegeGuard: Guard = async (
+  request: FastifyRequestWithAdminUser,
   reply,
   next,
 ) => {
@@ -28,7 +31,7 @@ const AdminPrivilegeGuard: Guard = async (
     }
     const accessToken = match[1];
     const { data, error } = await AdminSupabaseService.getClient().auth.getUser(
-      match[1],
+      accessToken,
     );
     if (error) {
       throw error;
@@ -44,8 +47,8 @@ const AdminPrivilegeGuard: Guard = async (
       throw e;
     }
     Logger.error(`Cannot verify access token: ${e.message}`);
-    throw new Error('Cannot verify access token.');
+    throw new CaughtError('Cannot verify access token.');
   }
 };
 
-export default AdminPrivilegeGuard;
+export default JwtAdminPrivilegeGuard;

@@ -9,6 +9,7 @@ import {
   UpdateGameParams,
 } from './games.schema';
 import {
+  CaughtError,
   ConflictError,
   ForbiddenError,
   NotFoundError,
@@ -51,7 +52,7 @@ class GamesService {
         throw e;
       }
       Logger.error(`Cannot get game: ${e.message}`);
-      throw new Error('Cannot get game.');
+      throw new CaughtError('Cannot get game.');
     }
   }
 
@@ -69,7 +70,7 @@ class GamesService {
       return data;
     } catch (e) {
       Logger.error(`Cannot get games: ${e.message}`);
-      throw new Error('Cannot get games.');
+      throw new CaughtError('Cannot get games.');
     }
   }
 
@@ -112,7 +113,7 @@ class GamesService {
         throw e;
       }
       Logger.error(`Cannot create game: ${e.message}`);
-      throw new Error('Cannot create game.');
+      throw new CaughtError('Cannot create game.');
     }
   }
 
@@ -162,7 +163,7 @@ class GamesService {
         throw e;
       }
       Logger.error(`Cannot update game: ${e.message}`);
-      throw new Error('Cannot update game.');
+      throw new CaughtError('Cannot update game.');
     }
   }
 
@@ -217,7 +218,7 @@ class GamesService {
         throw e;
       }
       Logger.error(`Cannot delete game: ${e.message}`);
-      throw new Error('Cannot delete game.');
+      throw new CaughtError('Cannot delete game.');
     }
   }
 }

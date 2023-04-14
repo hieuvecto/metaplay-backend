@@ -1,6 +1,11 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { Guard } from '../../interfaces';
-import { BadRequestError, UnauthorizedError, UserInputError } from '../errors';
+import {
+  BadRequestError,
+  CaughtError,
+  UnauthorizedError,
+  UserInputError,
+} from '../errors';
 import SupabaseService from '../supabase/supabase.service';
 import Logger from '../logger';
 import { SupabaseClient, User } from '@supabase/supabase-js';
@@ -43,7 +48,7 @@ const JwtLoginLevelGuard: Guard = async (
       throw e;
     }
     Logger.error(`Cannot verify access token: ${e.message}`);
-    throw new Error('Cannot verify access token.');
+    throw new CaughtError('Cannot verify access token.');
   }
 };
 

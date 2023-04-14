@@ -27,6 +27,7 @@ const GamesRoutes: Route[] = [
     url: '/',
     schema: CreateGameSchema,
     handler: GamesController.createGame,
+    // I used preHandler registering in fastify.route() instead of fastify.addHook('preHandler')
     preHandler: JwtLoginLevelGuard,
   },
   {

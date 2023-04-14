@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/hieuvecto/metaplay-dummy-site#readme",
   "dependencies": {
+    "@fastify/helmet": "^10.1.0",
     "@fastify/swagger": "^8.3.1",
     "@fastify/swagger-ui": "^1.8.0",
     "@supabase/supabase-js": "^2.20.0",

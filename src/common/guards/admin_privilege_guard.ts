@@ -6,9 +6,9 @@ import {
   UnauthorizedError,
   UserInputError,
 } from '../errors';
-import SupabaseService from '../supabase/supabase.service';
 import Logger from '../logger';
 import { User } from '@supabase/supabase-js';
+import AdminSupabaseService from '../supabase/admin_supabase.service';
 
 const AdminPrivilegeGuard: Guard = async (
   request: FastifyRequest & { adminUser: User },
@@ -27,7 +27,7 @@ const AdminPrivilegeGuard: Guard = async (
       throw new BadRequestError('Bad request.');
     }
     const accessToken = match[1];
-    const { data, error } = await SupabaseService.getInstance().auth.getUser(
+    const { data, error } = await AdminSupabaseService.getClient().auth.getUser(
       match[1],
     );
     if (error) {

@@ -6,7 +6,7 @@ class AdminSupabaseService {
 
   private constructor() {}
 
-  public static getInstance(): SupabaseClient {
+  public static getClient(): SupabaseClient {
     if (!AdminSupabaseService.instance) {
       AdminSupabaseService.instance = createClient(
         configs.supabaseUrl,

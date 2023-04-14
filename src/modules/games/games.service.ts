@@ -1,5 +1,4 @@
-import { SupabaseClient, User } from '@supabase/supabase-js';
-import { PostgrestError } from '@supabase/postgrest-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 import SupabaseService from '../../common/supabase/supabase.service';
 import {
   CreateGameBody,
@@ -16,14 +15,13 @@ import {
   UserInputError,
 } from '../../common/errors';
 import Logger from '../../common/logger';
-import { FastifyRequest } from 'fastify';
 import { FastifyRequestWithUser } from '../../common/guards/jwt_login_level_guard';
 
 class GamesService {
   private static instance: GamesService;
 
   private constructor(
-    private readonly supabaseService: SupabaseClient = SupabaseService.getInstance(),
+    private readonly publicSupabaseClient: SupabaseClient = SupabaseService.getClient(),
   ) {}
 
   public static getInstance(): GamesService {
@@ -36,7 +34,7 @@ class GamesService {
 
   public async getGame({ id }: GetGameParams): Promise<any> {
     try {
-      const { data, error } = await this.supabaseService
+      const { data, error } = await this.publicSupabaseClient
         .from('games')
         .select()
         .eq('id', id)
@@ -62,10 +60,10 @@ class GamesService {
     offset = 0,
   }: GetGamesQueryString): Promise<any[]> {
     try {
-      const { data, error } = await this.supabaseService
+      const { data, error } = await this.publicSupabaseClient
         .from('games')
         .select()
-        .range(offset, offset + limit);
+        .range(offset, offset + limit - 1);
       if (error) throw error;
 
       return data;
@@ -80,7 +78,7 @@ class GamesService {
     request: FastifyRequestWithUser,
   ): Promise<any> {
     try {
-      const getRes = await this.supabaseService
+      const getRes = await request.supabaseClient
         .from('games')
         .select()
         .eq('name', name)
@@ -93,7 +91,7 @@ class GamesService {
         throw new ConflictError('Game existed.');
       }
 
-      const { data, error } = await this.supabaseService
+      const { data, error } = await request.supabaseClient
         .from('games')
         .insert({
           name,
@@ -127,7 +125,7 @@ class GamesService {
     request: FastifyRequestWithUser,
   ): Promise<any> {
     try {
-      const getRes = await this.supabaseService
+      const getRes = await request.supabaseClient
         .from('games')
         .select()
         .eq('id', id)
@@ -139,12 +137,12 @@ class GamesService {
       if (!getRes.data) {
         throw new NotFoundError('Game not found.');
       }
-      // I configured RLS for update operation, so no need this check
+      // I configured RLS for update operation, so commented out this validation for demoing the RLS.
       // if (getRes.data.user_id !== request.user.id) {
       //   throw new ForbiddenError('User is not owner.');
       // }
 
-      const { data, error } = await this.supabaseService
+      const { data, error } = await request.supabaseClient
         .from('games')
         .update({
           display_name,
@@ -173,7 +171,7 @@ class GamesService {
     request: FastifyRequestWithUser,
   ): Promise<boolean> {
     try {
-      const getRes = await this.supabaseService
+      const getRes = await request.supabaseClient
         .from('games')
         .select()
         .eq('id', id)
@@ -185,17 +183,32 @@ class GamesService {
       if (!getRes.data) {
         throw new NotFoundError('Game not found.');
       }
-      // I configured RLS for delete operation, so no need this check
+      // I configured RLS for delete operation, so commented out this validation for demoing the RLS.
       // if (getRes.data.user_id !== request.user.id) {
       //   throw new ForbiddenError('User is not owner.');
       // }
 
-      const { error } = await this.supabaseService
+      const { error } = await request.supabaseClient
         .from('games')
         .delete()
         .eq('id', id);
       if (error) {
         throw error;
+      }
+
+      // This block is only for demoing the RLS,
+      // because WITH CHECK(which throws error) cannot be applied to DELETE operation.
+      const recheckRes = await request.supabaseClient
+        .from('games')
+        .select()
+        .eq('id', id)
+        .limit(1)
+        .maybeSingle();
+      if (recheckRes.data) {
+        throw new ForbiddenError('Forbidden');
+      }
+      if (recheckRes.error) {
+        throw recheckRes.error;
       }
 
       return true;

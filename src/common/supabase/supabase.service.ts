@@ -6,7 +6,7 @@ class SupabaseService {
 
   private constructor() {}
 
-  public static getInstance(): SupabaseClient {
+  public static getClient(): SupabaseClient {
     if (!SupabaseService.instance) {
       SupabaseService.instance = createClient(
         configs.supabaseUrl,
@@ -15,6 +15,23 @@ class SupabaseService {
     }
 
     return SupabaseService.instance;
+  }
+
+  public static getNewClientWithAccessToken(
+    accessToken: string,
+  ): SupabaseClient {
+    return createClient(configs.supabaseUrl, configs.supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+        persistSession: false,
+      },
+      global: {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    });
   }
 }
 

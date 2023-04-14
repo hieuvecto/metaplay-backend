@@ -21,6 +21,8 @@ yarn dev
 - After the app starting up, access http://localhost:8080/docs to see the swagger docs.
 - You can test api directly in swagger docs.
 
+Warning: you should use chrome to open swagger, there's empty page issue on Safari.
+
 ## How to get access token to run authorization required APIs.
 
 - Run the frontend app and login to get the access token.
@@ -28,13 +30,23 @@ yarn dev
 
 ## Some test account (email authentication)
 
-- Admin -
-  Email: crypto.hieuvecto@gmail.com
-  Pass: 123abc
+- Admin
+
+```
+Email:
+crypto.hieuvecto@gmail.com
+Pass:
+123abc
+```
 
 - User -
-  Email: hieuvectograb@gmail.com
-  Pass: 123abc
+
+```
+Email:
+hieuvectograb@gmail.com
+Pass:
+123abc
+```
 
 ## Some images of the app (I don't find out screen2gif tool on mac to record video)
 

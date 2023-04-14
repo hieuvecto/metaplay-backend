@@ -74,6 +74,25 @@ class GamesService {
     }
   }
 
+  public async getMyGames(
+    { limit = 100, offset = 0 }: GetGamesQueryString,
+    request: FastifyRequestWithUser,
+  ): Promise<any[]> {
+    try {
+      const { data, error } = await this.publicSupabaseClient
+        .from('games')
+        .select()
+        .eq('user_id', request.user.id)
+        .range(offset, offset + limit - 1);
+      if (error) throw error;
+
+      return data;
+    } catch (e) {
+      Logger.error(`Cannot get my games: ${e.message}`);
+      throw new CaughtError('Cannot get my games.');
+    }
+  }
+
   public async createGame(
     { name, display_name, description, image_url }: CreateGameBody,
     request: FastifyRequestWithUser,

@@ -1,10 +1,11 @@
-import { FastifyRequest } from 'fastify';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import { Controller } from '../../interfaces';
 import {
   CreateGameBody,
   DeleteGameParams,
   GetGameParams,
   GetGamesQueryString,
+  GetMyGamesQueryString,
   UpdateGameBody,
   UpdateGameParams,
 } from './games.schema';
@@ -13,6 +14,7 @@ import { StatusCodes } from 'http-status-codes';
 import { FastifyRequestWithUser } from '../../common/guards/jwt_login_level_guard';
 
 const GamesController: Controller = {
+  // TODO: add return type in controller methods.
   getGame: async (
     request: FastifyRequest<{ Params: GetGameParams }>,
     reply,
@@ -26,6 +28,17 @@ const GamesController: Controller = {
     reply,
   ) => {
     const data = await GamesService.getInstance().getGames(request.query);
+    return reply.send(data);
+  },
+
+  getMyGames: async (
+    request: FastifyRequest<{ Querystring: GetMyGamesQueryString }>,
+    reply,
+  ) => {
+    const data = await GamesService.getInstance().getMyGames(
+      request.query,
+      request as FastifyRequestWithUser,
+    );
     return reply.send(data);
   },
 

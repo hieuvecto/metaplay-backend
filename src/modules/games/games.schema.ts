@@ -60,6 +60,44 @@ export const GetGamesSchema = {
 
 export type GetGamesQueryString = FromSchema<typeof GetGamesSchema.querystring>;
 
+export const GetMyGamesSchema = {
+  summary: 'Get my games records (AUTHORIZATION REQUIRED)',
+  tags: ['game'],
+  description: 'Get my games records',
+  querystring: {
+    type: 'object',
+    properties: {
+      limit: { type: 'integer', description: 'limit' },
+      offset: { type: 'integer', description: 'offset' },
+    },
+  },
+  response: {
+    200: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer', description: 'Game id' },
+          name: { type: 'string', description: 'Game name' },
+          display_name: { type: 'string', description: 'Display game name' },
+          description: { type: 'string', description: 'Game description' },
+          image_url: { type: 'string', description: 'Game image' },
+          user_id: { type: 'string', description: 'user id relation' },
+        },
+      },
+    },
+  },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+} as const;
+
+export type GetMyGamesQueryString = FromSchema<
+  typeof GetMyGamesSchema.querystring
+>;
+
 export const CreateGameSchema = {
   summary: 'Create new game record (AUTHORIZATION REQUIRED)',
   description: 'Create new game record.',

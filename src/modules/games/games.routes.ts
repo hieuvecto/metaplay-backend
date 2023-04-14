@@ -5,6 +5,7 @@ import {
   DeleteGameSchema,
   GetGameSchema,
   GetGamesSchema,
+  GetMyGamesSchema,
   UpdateGameSchema,
 } from './games.schema';
 import JwtLoginLevelGuard from '../../common/guards/jwt_login_level_guard';
@@ -21,6 +22,13 @@ const GamesRoutes: Route[] = [
     url: '/',
     schema: GetGamesSchema,
     handler: GamesController.getGames,
+  },
+  {
+    method: RouteMethod.GET,
+    url: '/own',
+    schema: GetMyGamesSchema,
+    handler: GamesController.getMyGames,
+    preHandler: JwtLoginLevelGuard,
   },
   {
     method: RouteMethod.POST,

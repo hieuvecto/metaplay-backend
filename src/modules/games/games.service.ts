@@ -61,6 +61,7 @@ class GamesService {
     offset = 0,
   }: GetGamesQueryString): Promise<any[]> {
     try {
+      // Hint: this query could be used on client for utilizing Supabase serverless API.
       const { data, error } = await this.publicSupabaseClient
         .from('games')
         .select()

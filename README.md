@@ -36,6 +36,17 @@ yarn dev
   Email: hieuvectograb@gmail.com
   Pass: 123abc
 
+## Some images of the app (I don't find out screen2gif tool on mac to record video)
+
+- Swagger
+  <img width="1438" alt="image" src="https://user-images.githubusercontent.com/16593431/232015713-188a619c-73ea-42e2-ac91-72e275663cb3.png">
+
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/16593431/232015767-87b5be50-e589-4e44-96ca-5b50683b874e.png">
+- ER diagram
+<img width="521" alt="image" src="https://user-images.githubusercontent.com/16593431/232013212-5e3e4638-a968-43dd-b4c2-6667b750b68c.png">
+- RLS policies
+<img width="1134" alt="image" src="https://user-images.githubusercontent.com/16593431/232013914-6d4e6c34-c695-40a5-9c1d-fb917412bd2e.png">
+
 ## TODO to improve the app
 
 ```js
